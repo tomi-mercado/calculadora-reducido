@@ -10,6 +10,7 @@ const ZONE_A_POSITIONS = [
     gf: 43,
     gc: 18,
     dg: 25,
+    imageSrc: "images/18/37.png",
   },
   {
     position: 2,
@@ -22,10 +23,11 @@ const ZONE_A_POSITIONS = [
     gf: 40,
     gc: 21,
     dg: 19,
+    imageSrc: "images/18/36.png",
   },
   {
     position: 3,
-    team: "Quilmes",
+    team: "Quilmes*",
     pts: 60,
     pj: 38,
     pg: 17,
@@ -34,6 +36,7 @@ const ZONE_A_POSITIONS = [
     gf: 41,
     gc: 24,
     dg: 17,
+    imageSrc: "images/18/16.png",
   },
   {
     position: 4,
@@ -46,6 +49,7 @@ const ZONE_A_POSITIONS = [
     gf: 34,
     gc: 24,
     dg: 10,
+    imageSrc: "images/18/2.png",
   },
   {
     position: 5,
@@ -58,6 +62,7 @@ const ZONE_A_POSITIONS = [
     gf: 32,
     gc: 27,
     dg: 5,
+    imageSrc: "images/18/31.png",
   },
   {
     position: 6,
@@ -70,6 +75,7 @@ const ZONE_A_POSITIONS = [
     gf: 34,
     gc: 32,
     dg: 2,
+    imageSrc: "images/18/64.png",
   },
   {
     position: 7,
@@ -82,6 +88,7 @@ const ZONE_A_POSITIONS = [
     gf: 37,
     gc: 36,
     dg: 1,
+    imageSrc: "images/18/79.png",
   },
   {
     position: 8,
@@ -94,6 +101,7 @@ const ZONE_A_POSITIONS = [
     gf: 34,
     gc: 33,
     dg: 1,
+    imageSrc: "images/18/101.png",
   },
 ];
 
@@ -108,7 +116,8 @@ const ZONE_B_POSITIONS = [
     pp: 8,
     gf: 41,
     gc: 24,
-    dg: "+17",
+    dg: 17,
+    imageSrc: "images/18/22.png",
   },
   {
     position: 2,
@@ -120,7 +129,8 @@ const ZONE_B_POSITIONS = [
     pp: 8,
     gf: 35,
     gc: 20,
-    dg: "+15",
+    dg: 15,
+    imageSrc: "images/18/178.png",
   },
   {
     position: 3,
@@ -132,7 +142,8 @@ const ZONE_B_POSITIONS = [
     pp: 10,
     gf: 39,
     gc: 25,
-    dg: "+14",
+    dg: 14,
+    imageSrc: "images/18/42.png",
   },
   {
     position: 4,
@@ -144,11 +155,12 @@ const ZONE_B_POSITIONS = [
     pp: 9,
     gf: 44,
     gc: 33,
-    dg: "+11",
+    dg: 11,
+    imageSrc: "images/18/156.png",
   },
   {
     position: 5,
-    team: "San Telmo",
+    team: "San Telmo*",
     pts: 62,
     pj: 38,
     pg: 18,
@@ -156,7 +168,8 @@ const ZONE_B_POSITIONS = [
     pp: 9,
     gf: 49,
     gc: 25,
-    dg: "+24",
+    dg: 24,
+    imageSrc: "images/18/91.png",
   },
   {
     position: 6,
@@ -168,7 +181,8 @@ const ZONE_B_POSITIONS = [
     pp: 12,
     gf: 40,
     gc: 26,
-    dg: "+14",
+    dg: 14,
+    imageSrc: "images/18/7.png",
   },
   {
     position: 7,
@@ -180,7 +194,8 @@ const ZONE_B_POSITIONS = [
     pp: 10,
     gf: 38,
     gc: 24,
-    dg: "+14",
+    dg: 14,
+    imageSrc: "images/18/43.png",
   },
   {
     position: 8,
@@ -192,7 +207,8 @@ const ZONE_B_POSITIONS = [
     pp: 8,
     gf: 27,
     gc: 22,
-    dg: "+5",
+    dg: 5,
+    imageSrc: "images/18/53.png",
   },
 ];
 
