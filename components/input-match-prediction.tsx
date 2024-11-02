@@ -10,10 +10,12 @@ export const InputMatchPrediction = ({
   home,
   away,
   allowDraw,
+  loserPassToNextRound,
 }: {
   home: TeamPosition;
   away: TeamPosition;
   allowDraw?: boolean;
+  loserPassToNextRound?: boolean;
 }) => {
   const [result, setResult] = useState<"home" | "away" | "draw" | null>(
     allowDraw ? "draw" : null
@@ -87,7 +89,20 @@ export const InputMatchPrediction = ({
         />
       </div>
 
-      <input hidden readOnly name={name} ref={inputRef} />
+      <input
+        hidden
+        readOnly
+        name={name}
+        ref={inputRef}
+        required={!allowDraw}
+        defaultValue={allowDraw ? "draw" : ""}
+      />
+      <input
+        hidden
+        readOnly
+        name={`${name}-loser-pass`}
+        value={loserPassToNextRound ? "true" : "false"}
+      />
     </div>
   );
 };
