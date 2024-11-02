@@ -1,4 +1,5 @@
 import { InputMatchPrediction } from "@/components/input-match-prediction";
+import { RoundForm } from "@/components/round-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy } from "lucide-react";
 import { positions } from "./positions-regular-zone";
@@ -36,20 +37,7 @@ export default function Home() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Octavos de final</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {firstRoundMatches.map((match, index) => (
-            <InputMatchPrediction
-              key={index}
-              home={match.home}
-              away={match.away}
-            />
-          ))}
-        </CardContent>
-      </Card>
+      <RoundForm roundName="First Round" matches={firstRoundMatches} />
     </div>
   );
 }
