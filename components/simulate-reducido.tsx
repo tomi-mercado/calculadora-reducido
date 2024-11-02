@@ -1,7 +1,8 @@
 "use client";
 
 import { positions } from "@/app/positions-regular-zone";
-import { defineVentajaDeportiva, findTeam } from "@/lib/utils";
+import { PlayedRound, Round } from "@/lib/types";
+import { defineVentajaDeportiva } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { PromotionAnnouncement } from "./promotion-announcement";
@@ -48,39 +49,17 @@ const final = {
 
 const firstRoundMatches = calculateMatchesFirstRound();
 
-const getRoundMatches = (teamsWhoClassifyHistory: string[][]) => {
-  const teamWhoPlayFinalAndLoose = teamsWhoClassifyHistory[0]?.find(
-    (team) => team === final.home.team || team === final.away.team
-  );
-
-  const winnerOfFinal =
-    final.home.team === teamWhoPlayFinalAndLoose ? final.away : final.home;
-
-  const lastInHistory = teamsWhoClassifyHistory.at(-1);
-
-  if (!lastInHistory) {
-    return {
-      nextRoundMatches: firstRoundMatches,
-      finalWinner: winnerOfFinal,
-      secondPromotion: null,
-    };
-  }
-
-  const isReducidoFinal = lastInHistory.length === 1;
-
-  const secondPromotionTeam = isReducidoFinal
-    ? findTeam(lastInHistory[0])
-    : null;
-
-  const classifiedTeamsPositions = lastInHistory
-    .map((team) => findTeam(team))
+const getNextRound = (round: PlayedRound): Round => {
+  const classifiedTeamsPositions = round
+    .map((result) => (result.classified === "home" ? result.home : result.away))
     .sort((a, b) => {
       const betterVentajaDeportiva = defineVentajaDeportiva(a, b);
       return a.team === betterVentajaDeportiva.team ? 1 : -1;
     });
-  const nextRoundMatches: typeof firstRoundMatches = [];
 
-  for (let i = 0; i < lastInHistory.length; i += 2) {
+  const nextRoundMatches: Round = [];
+
+  for (let i = 0; i < round.length; i += 2) {
     const teamA = classifiedTeamsPositions[i];
     const teamB =
       classifiedTeamsPositions[classifiedTeamsPositions.length - 1 - i];
@@ -96,25 +75,78 @@ const getRoundMatches = (teamsWhoClassifyHistory: string[][]) => {
         ? teamB
         : teamA;
 
-    nextRoundMatches.push({ home, away });
+    nextRoundMatches.push({ home, away, classified: null, result: null });
   }
 
-  return {
-    nextRoundMatches,
-    finalWinner: winnerOfFinal,
-    secondPromotion: secondPromotionTeam,
-  };
+  return nextRoundMatches;
+};
+
+const getFinalWinner = (matchResultsHistory: Round[]) => {
+  if (matchResultsHistory.length === 0) {
+    return null;
+  }
+
+  validateIfRoundIsPlayed(matchResultsHistory[0]);
+
+  const finalResult = matchResultsHistory[0].find(
+    (result) =>
+      result.home.team === final.home.team &&
+      result.away.team === final.away.team
+  );
+
+  if (!finalResult) {
+    throw new Error("Final result not found");
+  }
+
+  const finalWinner = finalResult.result === "home" ? final.home : final.away;
+
+  return finalWinner;
+};
+
+const getSecondPromotion = (matchResultsHistory: Round[]) => {
+  if (matchResultsHistory.length !== 1) {
+    return null;
+  }
+
+  validateIfRoundIsPlayed(matchResultsHistory.at(-1)!);
+
+  const finalResult = matchResultsHistory[0][0]!;
+  return finalResult.result === "home" ? finalResult.home : finalResult.away;
+};
+
+const validateIfRoundIsPlayed = (round: Round) => {
+  const areMissingResults = round.some(
+    (result) => result.result === null || result.classified
+  );
+
+  if (areMissingResults) {
+    throw new Error("Missing results");
+  }
+
+  return round as PlayedRound;
+};
+
+const getRoundMatches = (matchResultsHistory: Round[]) => {
+  const lastResults = matchResultsHistory.at(-1);
+
+  if (!lastResults) {
+    return firstRoundMatches;
+  }
+
+  validateIfRoundIsPlayed(lastResults);
+
+  // The cast is correct because I am checking not missing results
+  const nextRoundMatches = getNextRound(lastResults as PlayedRound);
+
+  return nextRoundMatches;
 };
 
 export const SimulateReducido = () => {
-  const [teamsWhoClassifyHistory, setTeamsWhoClassifyHistory] = useState<
-    string[][]
-  >([]);
-  const {
-    finalWinner,
-    nextRoundMatches: roundMatches,
-    secondPromotion,
-  } = getRoundMatches(teamsWhoClassifyHistory);
+  const [rounds, setRounds] = useState<Round[]>([]);
+
+  const roundMatches = getRoundMatches(rounds);
+  const finalWinner = getFinalWinner(rounds);
+  const secondPromotion = getSecondPromotion(rounds);
 
   const isFirstRound = roundMatches.length === firstRoundMatches.length;
 
@@ -132,7 +164,7 @@ export const SimulateReducido = () => {
         <PromotionAnnouncement promotions={[finalWinner, secondPromotion]} />
         <Button
           onClick={() => {
-            setTeamsWhoClassifyHistory([]);
+            setRounds([]);
           }}
         >
           Volver a simular
@@ -143,12 +175,12 @@ export const SimulateReducido = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {!!teamsWhoClassifyHistory.length && (
+      {!!rounds.length && (
         <Button
           variant="ghost"
           className="w-fit"
           onClick={() => {
-            setTeamsWhoClassifyHistory((prev) => prev.slice(0, -1));
+            setRounds((prev) => prev.slice(0, -1));
           }}
         >
           <ChevronLeft size={24} className="mr-2" />
@@ -159,8 +191,8 @@ export const SimulateReducido = () => {
         roundName={roundName}
         matches={roundMatches}
         firstPositionFinal={isFirstRound ? final : undefined}
-        onSubmit={(teamsWhoClassify) => {
-          setTeamsWhoClassifyHistory((prev) => [...prev, teamsWhoClassify]);
+        onSubmit={(roundResults) => {
+          setRounds((prev) => [...prev, roundResults]);
         }}
       />
     </div>

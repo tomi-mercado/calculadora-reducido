@@ -1,7 +1,8 @@
 "use client";
 
 import { TeamPosition } from "@/app/positions-regular-zone";
-import { Result, resultSchema } from "@/lib/types";
+import { PlayedMatchResult, resultSchema } from "@/lib/types";
+import { findTeam } from "@/lib/utils";
 import { Trophy } from "lucide-react";
 import { useFormState } from "react-dom";
 import { InputMatchPrediction } from "./input-match-prediction";
@@ -11,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 type State =
   | { type: "idle" }
   | { type: "error"; error: string }
-  | { type: "success"; teamsWhoClassify: string[] };
+  | { type: "success"; matchResults: PlayedMatchResult[] };
 
 const handleSubmit = (_: State, formData: FormData): State => {
   const entries = formData.entries();
@@ -19,34 +20,32 @@ const handleSubmit = (_: State, formData: FormData): State => {
     return { ...acc, [key]: value };
   }, {});
 
-  const matchResults: {
-    home: string;
-    away: string;
-    result: Result;
-  }[] = [];
+  const matchResults: Omit<PlayedMatchResult, "classified">[] = [];
 
   for (const key in data) {
     if (key.endsWith("-loser-pass")) {
       continue;
     }
 
-    const [home, away] = key.split("-");
+    const [homeTeam, awayTeam] = key.split("-");
     const resultToCheck = data[key as keyof typeof data];
     const resultParse = resultSchema.safeParse(resultToCheck);
 
     if (!resultParse.success) {
       return {
         type: "error" as const,
-        error: `Debes indicar un resultado válido para ${home}-${away}`,
+        error: `Debes indicar un resultado válido para ${homeTeam}-${awayTeam}`,
       };
     }
 
+    const home = findTeam(homeTeam);
+    const away = findTeam(awayTeam);
     const result = resultParse.data;
 
     matchResults.push({ home, away, result });
   }
 
-  const teamsWhoClassify: string[] = [];
+  const matchResultsWithClassified: PlayedMatchResult[] = [];
 
   for (const match of matchResults) {
     const loserPassToNextRound =
@@ -54,34 +53,32 @@ const handleSubmit = (_: State, formData: FormData): State => {
       "true";
 
     if (loserPassToNextRound) {
-      if (match.result === "home") {
-        teamsWhoClassify.push(match.away);
-        continue;
+      if (match.result === "draw") {
+        return {
+          type: "error" as const,
+          error: `Invalid value for ${match.home}-${match.away}. Loser can't pass to next round if it's a draw`,
+        };
       }
 
-      if (match.result === "away") {
-        teamsWhoClassify.push(match.home);
-        continue;
-      }
-
-      return {
-        type: "error" as const,
-        error: `Invalid value for ${match.home}-${match.away}. Loser can't pass to next round if it's a draw`,
-      };
+      matchResultsWithClassified.push({
+        home: match.home,
+        away: match.away,
+        result: match.result,
+        classified: match.result === "home" ? "away" : "home",
+      });
     }
 
-    if (match.result === "home" || match.result === "draw") {
-      teamsWhoClassify.push(match.home);
-      continue;
-    }
-
-    if (match.result === "away") {
-      teamsWhoClassify.push(match.away);
-      continue;
-    }
+    matchResultsWithClassified.push({
+      ...match,
+      classified:
+        match.result === "home" || match.result === "draw" ? "home" : "away",
+    });
   }
 
-  return { type: "success" as const, teamsWhoClassify };
+  return {
+    type: "success" as const,
+    matchResults: matchResultsWithClassified,
+  };
 };
 
 export const RoundForm = ({
@@ -94,14 +91,14 @@ export const RoundForm = ({
   matches: { home: TeamPosition; away: TeamPosition }[];
   children?: React.ReactNode;
   firstPositionFinal?: { home: TeamPosition; away: TeamPosition };
-  onSubmit: (teamsWhoClassify: string[]) => void;
+  onSubmit: (matchResults: PlayedMatchResult[]) => void;
 }) => {
   const [state, action] = useFormState(
     (prevState: State, formData: FormData) => {
       const retVal = handleSubmit(prevState, formData);
 
       if (retVal.type === "success") {
-        onSubmit(retVal.teamsWhoClassify);
+        onSubmit(retVal.matchResults);
       }
 
       return retVal;
