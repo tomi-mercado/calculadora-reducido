@@ -32,7 +32,7 @@ export const InputMatchPrediction = ({
   const name = `${home.team}-${away.team}`;
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-4 py-2 px-4 bg-accent rounded-lg">
       <div className="inline-flex items-center whitespace-nowrap text-left gap-2">
         <Image
           src={getImageURL(home.imageSrc)}
@@ -44,11 +44,11 @@ export const InputMatchPrediction = ({
       </div>
       <div className="flex gap-2 justify-center">
         <Button
-          variant="outline"
+          variant="secondary"
           size="icon"
           type="button"
           className={cn(
-            "hover:bg-green-800/60",
+            "hover:bg-green-800/60 border border-white/10",
             result === "home" && "bg-green-800",
             result === "away" && "bg-red-800"
           )}
@@ -56,23 +56,23 @@ export const InputMatchPrediction = ({
         />
         {allowDraw && (
           <Button
-            variant="outline"
+            variant="secondary"
             size="icon"
             type="button"
             className={cn(
-              "hover:bg-yellow-400/60",
-              result === "draw" && "bg-yellow-400"
+              "hover:bg-yellow-400/60 border border-white/10",
+              result === "draw" && "bg-yellow-400 text-black"
             )}
             onClick={() => handleChange("draw")}
           />
         )}
         <Button
-          variant="outline"
+          variant="secondary"
           size="icon"
           onClick={() => handleChange("away")}
           type="button"
           className={cn(
-            "hover:bg-green-800/60",
+            "hover:bg-green-800/60 border border-white/10",
             result === "away" && "bg-green-800",
             result === "home" && "bg-red-800"
           )}

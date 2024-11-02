@@ -63,7 +63,7 @@ export const SimulateReducido = () => {
 
   if (finalWinner && secondPromotion) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         <PromotionAnnouncement promotions={[finalWinner, secondPromotion]} />
         <Button
           onClick={() => {
@@ -101,7 +101,7 @@ export const SimulateReducido = () => {
           const secondPromotionTeam = [
             ...positions.zoneA,
             ...positions.zoneB,
-          ].find(({ team }) => !teamsWhoClassify.includes(team))!;
+          ].find(({ team }) => teamsWhoClassify.includes(team))!;
           setSecondPromotion(secondPromotionTeam);
         }
 

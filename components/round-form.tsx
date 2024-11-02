@@ -139,7 +139,7 @@ export const RoundForm = ({
         <CardContent className="space-y-4">
           {matches.map((match, index) => (
             <InputMatchPrediction
-              key={index}
+              key={`${match.home.team}-${match.away.team}`}
               home={match.home}
               away={match.away}
               allowDraw

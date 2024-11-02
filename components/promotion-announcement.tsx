@@ -12,7 +12,7 @@ export function PromotionAnnouncement({
   promotions: [TeamPosition, TeamPosition];
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background flex items-center justify-center p-4 rounded-lg">
+    <div className="bg-gradient-to-b from-primary/5 to-background flex items-center justify-center p-4 rounded-lg">
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
