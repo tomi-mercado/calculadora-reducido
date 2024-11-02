@@ -1,5 +1,5 @@
+import { InputMatchPrediction } from "@/components/input-match-prediction";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Trophy } from "lucide-react";
 import { positions } from "./positions-regular-zone";
 
@@ -32,27 +32,24 @@ export default function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-4 place-items-center">
-            <div className="whitespace-nowrap">{finalists[0].team}</div>
-            <div className="flex gap-2 w-24">
-              <Input className="text-center" />
-              <Input className="text-center" />
-            </div>
-            <div className="whitespace-nowrap">{finalists[1].team}</div>
-          </div>
+          <InputMatchPrediction home={finalists[0]} away={finalists[1]} />
         </CardContent>
       </Card>
 
-      <div className="flex flex-col gap-2">
-        <h3 className="font-semibold text-xl">Octavos de final</h3>
-        <ul className="flex flex-col gap-1">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Octavos de final</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
           {firstRoundMatches.map((match, index) => (
-            <li key={index}>
-              {match.home.team} vs {match.away.team}
-            </li>
+            <InputMatchPrediction
+              key={index}
+              home={match.home}
+              away={match.away}
+            />
           ))}
-        </ul>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

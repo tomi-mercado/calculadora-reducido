@@ -216,3 +216,5 @@ export const positions = {
   zoneA: ZONE_A_POSITIONS,
   zoneB: ZONE_B_POSITIONS,
 };
+
+export type TeamPosition = (typeof ZONE_A_POSITIONS)[number];
