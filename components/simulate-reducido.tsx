@@ -1,6 +1,7 @@
 "use client";
 
-import { positions, TeamPosition } from "@/app/positions-regular-zone";
+import { positions } from "@/app/positions-regular-zone";
+import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { PromotionAnnouncement } from "./promotion-announcement";
 import { RoundForm } from "./round-form";
@@ -44,12 +45,82 @@ const final = {
   away: positions.zoneB[0],
 };
 
-export const SimulateReducido = () => {
-  const firstRoundMatches = calculateMatchesFirstRound();
+const firstRoundMatches = calculateMatchesFirstRound();
 
-  const [roundMatches, setRoundMatches] = useState(firstRoundMatches);
-  const [finalWinner, setFinalWinner] = useState<TeamPosition | null>();
-  const [secondPromotion, setSecondPromotion] = useState<TeamPosition | null>();
+const getRoundMatches = (teamsWhoClassifyHistory: string[][]) => {
+  const teamWhoPlayFinalAndLoose = teamsWhoClassifyHistory[0]?.find(
+    (team) => team === final.home.team || team === final.away.team
+  );
+
+  const winnerOfFinal =
+    final.home.team === teamWhoPlayFinalAndLoose ? final.away : final.home;
+
+  const lastInHistory = teamsWhoClassifyHistory.at(-1);
+
+  if (!lastInHistory) {
+    return {
+      nextRoundMatches: firstRoundMatches,
+      finalWinner: winnerOfFinal,
+      secondPromotion: null,
+    };
+  }
+
+  const isFinal = lastInHistory.length === 1;
+  const secondPromotionTeam = isFinal
+    ? [...positions.zoneA, ...positions.zoneB].find(({ team }) =>
+        lastInHistory[0].includes(team)
+      )!
+    : null;
+
+  const classifiedTeamsPositions = lastInHistory
+    .map(
+      (_team) =>
+        [...positions.zoneA, ...positions.zoneB].find(
+          ({ team }) => _team === team
+        )!
+    )
+    .sort((a, b) => {
+      if (a.position === b.position) {
+        const ptsA = a.pts;
+        const ptsB = b.pts;
+
+        return ptsA < ptsB ? 1 : -1;
+      }
+
+      return a.position < b.position ? 1 : -1;
+    });
+  const nextRoundMatches: typeof firstRoundMatches = [];
+
+  for (let i = 0; i < lastInHistory.length; i += 2) {
+    const teamA = classifiedTeamsPositions[i];
+    const teamB =
+      classifiedTeamsPositions[classifiedTeamsPositions.length - 1 - i];
+
+    const middle = Math.floor(lastInHistory.length / 2);
+    const home = i > middle ? teamA : teamB;
+    const away = i > middle ? teamB : teamA;
+
+    nextRoundMatches.push({ home, away });
+  }
+
+  console.log({ winnerOfFinal });
+
+  return {
+    nextRoundMatches,
+    finalWinner: winnerOfFinal,
+    secondPromotion: secondPromotionTeam,
+  };
+};
+
+export const SimulateReducido = () => {
+  const [teamsWhoClassifyHistory, setTeamsWhoClassifyHistory] = useState<
+    string[][]
+  >([]);
+  const {
+    finalWinner,
+    nextRoundMatches: roundMatches,
+    secondPromotion,
+  } = getRoundMatches(teamsWhoClassifyHistory);
 
   const isFirstRound = roundMatches.length === firstRoundMatches.length;
 
@@ -67,9 +138,7 @@ export const SimulateReducido = () => {
         <PromotionAnnouncement promotions={[finalWinner, secondPromotion]} />
         <Button
           onClick={() => {
-            setRoundMatches(firstRoundMatches);
-            setFinalWinner(null);
-            setSecondPromotion(null);
+            setTeamsWhoClassifyHistory([]);
           }}
         >
           Volver a simular
@@ -79,65 +148,27 @@ export const SimulateReducido = () => {
   }
 
   return (
-    <RoundForm
-      roundName={roundName}
-      matches={roundMatches}
-      firstPositionFinal={isFirstRound ? final : undefined}
-      onSubmit={(teamsWhoClassify) => {
-        if (isFirstRound) {
-          const teamWhoPlayFinalAndLoose = teamsWhoClassify.find(
-            (team) => team === final.home.team || team === final.away.team
-          );
-          const winnerOfFinal =
-            final.home.team === teamWhoPlayFinalAndLoose
-              ? final.away
-              : final.home;
-          setFinalWinner(winnerOfFinal);
-        }
-
-        const isFinal = roundMatches.length === 1;
-
-        if (isFinal) {
-          const secondPromotionTeam = [
-            ...positions.zoneA,
-            ...positions.zoneB,
-          ].find(({ team }) => teamsWhoClassify.includes(team))!;
-          setSecondPromotion(secondPromotionTeam);
-        }
-
-        const nextRoundMatches: typeof firstRoundMatches = [];
-        const classifiedTeamsPositions = teamsWhoClassify
-          .map(
-            (_team) =>
-              [...positions.zoneA, ...positions.zoneB].find(
-                ({ team }) => _team === team
-              )!
-          )
-          .sort((a, b) => {
-            if (a.position === b.position) {
-              const ptsA = a.pts;
-              const ptsB = b.pts;
-
-              return ptsA < ptsB ? 1 : -1;
-            }
-
-            return a.position < b.position ? 1 : -1;
-          });
-
-        for (let i = 0; i < teamsWhoClassify.length; i += 2) {
-          const teamA = classifiedTeamsPositions[i];
-          const teamB =
-            classifiedTeamsPositions[classifiedTeamsPositions.length - 1 - i];
-
-          const middle = Math.floor(teamsWhoClassify.length / 2);
-          const home = i > middle ? teamA : teamB;
-          const away = i > middle ? teamB : teamA;
-
-          nextRoundMatches.push({ home, away });
-        }
-
-        setRoundMatches(nextRoundMatches);
-      }}
-    />
+    <div className="flex flex-col gap-4">
+      {!!teamsWhoClassifyHistory.length && (
+        <Button
+          variant="ghost"
+          className="w-fit"
+          onClick={() => {
+            setTeamsWhoClassifyHistory((prev) => prev.slice(0, -1));
+          }}
+        >
+          <ChevronLeft size={24} className="mr-2" />
+          Ronda anterior
+        </Button>
+      )}
+      <RoundForm
+        roundName={roundName}
+        matches={roundMatches}
+        firstPositionFinal={isFirstRound ? final : undefined}
+        onSubmit={(teamsWhoClassify) => {
+          setTeamsWhoClassifyHistory((prev) => [...prev, teamsWhoClassify]);
+        }}
+      />
+    </div>
   );
 };

@@ -137,12 +137,12 @@ export const RoundForm = ({
           <CardTitle className="text-2xl text-center">{roundName}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {matches.map((match, index) => (
+          {matches.map((match) => (
             <InputMatchPrediction
               key={`${match.home.team}-${match.away.team}`}
               home={match.home}
               away={match.away}
-              allowDraw
+              allowDraw={matches.length !== 1}
             />
           ))}
         </CardContent>
@@ -150,7 +150,9 @@ export const RoundForm = ({
 
       {errorToShow && <p className="text-red-500">{errorToShow}</p>}
 
-      <Button>Next round</Button>
+      <Button>
+        {matches.length === 1 ? "Ver ascensos" : "Siguiente ronda"}
+      </Button>
     </form>
   );
 };
