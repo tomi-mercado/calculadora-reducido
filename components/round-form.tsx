@@ -1,6 +1,7 @@
 "use client";
 
 import { TeamPosition } from "@/app/positions-regular-zone";
+import { Trophy } from "lucide-react";
 import { z } from "zod";
 import { InputMatchPrediction } from "./input-match-prediction";
 import { Button } from "./ui/button";
@@ -80,11 +81,12 @@ const handleSubmit = (formData: FormData) => {
 export const RoundForm = ({
   matches,
   roundName,
-  children,
+  firstPositionFinal,
 }: {
   roundName: string;
   matches: { home: TeamPosition; away: TeamPosition }[];
   children?: React.ReactNode;
+  firstPositionFinal: { home: TeamPosition; away: TeamPosition };
 }) => {
   return (
     <form
@@ -92,7 +94,21 @@ export const RoundForm = ({
       // @ts-expect-error me pudrí de pelear con las versiones de ts
       action={handleSubmit}
     >
-      {children}
+      <Card className="border-primary">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl justify-center">
+            <Trophy className="h-6 w-6 text-primary" />
+            Final
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <InputMatchPrediction
+            loserPassToNextRound
+            home={firstPositionFinal.home}
+            away={firstPositionFinal.away}
+          />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
