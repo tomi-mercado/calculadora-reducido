@@ -96,9 +96,16 @@ const getRoundMatches = (teamsWhoClassifyHistory: string[][]) => {
     const teamB =
       classifiedTeamsPositions[classifiedTeamsPositions.length - 1 - i];
 
-    const middle = Math.floor(lastInHistory.length / 2);
-    const home = i > middle ? teamA : teamB;
-    const away = i > middle ? teamB : teamA;
+    const home =
+      classifiedTeamsPositions.indexOf(teamA) >
+      classifiedTeamsPositions.indexOf(teamB)
+        ? teamA
+        : teamB;
+    const away =
+      classifiedTeamsPositions.indexOf(teamA) >
+      classifiedTeamsPositions.indexOf(teamB)
+        ? teamB
+        : teamA;
 
     nextRoundMatches.push({ home, away });
   }
