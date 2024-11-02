@@ -1,6 +1,7 @@
 "use client";
 
 import { positions } from "@/app/positions-regular-zone";
+import { defineVentajaDeportiva, findTeam } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { PromotionAnnouncement } from "./promotion-announcement";
@@ -65,29 +66,17 @@ const getRoundMatches = (teamsWhoClassifyHistory: string[][]) => {
     };
   }
 
-  const isFinal = lastInHistory.length === 1;
-  const secondPromotionTeam = isFinal
-    ? [...positions.zoneA, ...positions.zoneB].find(({ team }) =>
-        lastInHistory[0].includes(team)
-      )!
+  const isReducidoFinal = lastInHistory.length === 1;
+
+  const secondPromotionTeam = isReducidoFinal
+    ? findTeam(lastInHistory[0])
     : null;
 
   const classifiedTeamsPositions = lastInHistory
-    .map(
-      (_team) =>
-        [...positions.zoneA, ...positions.zoneB].find(
-          ({ team }) => _team === team
-        )!
-    )
+    .map((team) => findTeam(team))
     .sort((a, b) => {
-      if (a.position === b.position) {
-        const ptsA = a.pts;
-        const ptsB = b.pts;
-
-        return ptsA > ptsB ? 1 : -1;
-      }
-
-      return a.position < b.position ? 1 : -1;
+      const betterVentajaDeportiva = defineVentajaDeportiva(a, b);
+      return a.team === betterVentajaDeportiva.team ? 1 : -1;
     });
   const nextRoundMatches: typeof firstRoundMatches = [];
 
@@ -109,8 +98,6 @@ const getRoundMatches = (teamsWhoClassifyHistory: string[][]) => {
 
     nextRoundMatches.push({ home, away });
   }
-
-  console.log({ winnerOfFinal });
 
   return {
     nextRoundMatches,
