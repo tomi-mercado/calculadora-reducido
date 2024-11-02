@@ -4,6 +4,7 @@ import { positions, TeamPosition } from "@/app/positions-regular-zone";
 import { useState } from "react";
 import { PromotionAnnouncement } from "./promotion-announcement";
 import { RoundForm } from "./round-form";
+import { Button } from "./ui/button";
 
 const calculateMatchesFirstRound = () => {
   const { zoneA, zoneB } = positions;
@@ -62,7 +63,18 @@ export const SimulateReducido = () => {
 
   if (finalWinner && secondPromotion) {
     return (
-      <PromotionAnnouncement promotions={[finalWinner, secondPromotion]} />
+      <div className="flex flex-col gap-4">
+        <PromotionAnnouncement promotions={[finalWinner, secondPromotion]} />
+        <Button
+          onClick={() => {
+            setRoundMatches(firstRoundMatches);
+            setFinalWinner(null);
+            setSecondPromotion(null);
+          }}
+        >
+          Volver a simular
+        </Button>
+      </div>
     );
   }
 
