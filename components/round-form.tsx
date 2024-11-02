@@ -90,13 +90,26 @@ export const RoundForm = ({
   matches,
   roundName,
   firstPositionFinal,
+  onSubmit,
 }: {
   roundName: string;
   matches: { home: TeamPosition; away: TeamPosition }[];
   children?: React.ReactNode;
   firstPositionFinal?: { home: TeamPosition; away: TeamPosition };
+  onSubmit: (teamsWhoClassify: string[]) => void;
 }) => {
-  const [state, action] = useFormState(handleSubmit, { type: "idle" });
+  const [state, action] = useFormState(
+    (prevState: State, formData: FormData) => {
+      const retVal = handleSubmit(prevState, formData);
+
+      if (retVal.type === "success") {
+        onSubmit(retVal.teamsWhoClassify);
+      }
+
+      return retVal;
+    },
+    { type: "idle" }
+  );
   const errorToShow = state.type === "error" ? state.error : null;
 
   return (

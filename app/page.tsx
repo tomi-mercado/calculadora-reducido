@@ -1,4 +1,4 @@
-import { RoundForm } from "@/components/round-form";
+import { SimulateReducido } from "@/components/simulate-reducido";
 import { positions } from "./positions-regular-zone";
 
 const calculateMatchesFirstRound = () => {
@@ -35,18 +35,5 @@ const calculateMatchesFirstRound = () => {
 };
 
 export default function Home() {
-  const firstRoundMatches = calculateMatchesFirstRound();
-
-  return (
-    <div className="mx-auto max-w-3xl py-6">
-      <RoundForm
-        roundName="Octavos de final"
-        matches={firstRoundMatches}
-        firstPositionFinal={{
-          home: positions.zoneA[0],
-          away: positions.zoneB[0],
-        }}
-      />
-    </div>
-  );
+  return <SimulateReducido />;
 }
