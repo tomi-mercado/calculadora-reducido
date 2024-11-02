@@ -21,9 +21,16 @@ const handleSubmit = (_: State, formData: FormData): State => {
   }, {});
 
   const matchResults: Omit<PlayedMatchResult, "classified">[] = [];
+  const matchesInWhichPassLoser: string[] = [];
 
   for (const key in data) {
     if (key.endsWith("-loser-pass")) {
+      if (data[key as keyof typeof data] !== "true") {
+        continue;
+      }
+
+      const [homeTeam, awayTeam] = key.split("-").slice(0, 2);
+      matchesInWhichPassLoser.push(`${homeTeam}-${awayTeam}`);
       continue;
     }
 
@@ -48,15 +55,15 @@ const handleSubmit = (_: State, formData: FormData): State => {
   const matchResultsWithClassified: PlayedMatchResult[] = [];
 
   for (const match of matchResults) {
-    const loserPassToNextRound =
-      data[`${match.home}-${match.away}-loser-pass` as keyof typeof data] ===
-      "true";
+    const loserPassToNextRound = matchesInWhichPassLoser.includes(
+      `${match.home.team}-${match.away.team}`
+    );
 
     if (loserPassToNextRound) {
       if (match.result === "draw") {
         return {
           type: "error" as const,
-          error: `Invalid value for ${match.home}-${match.away}. Loser can't pass to next round if it's a draw`,
+          error: `Invalid value for ${match.home.team}-${match.away.team}. Loser can't pass to next round if it's a draw`,
         };
       }
 
@@ -66,6 +73,8 @@ const handleSubmit = (_: State, formData: FormData): State => {
         result: match.result,
         classified: match.result === "home" ? "away" : "home",
       });
+
+      continue;
     }
 
     matchResultsWithClassified.push({

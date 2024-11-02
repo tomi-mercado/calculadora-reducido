@@ -104,19 +104,29 @@ const getFinalWinner = (matchResultsHistory: Round[]) => {
 };
 
 const getSecondPromotion = (matchResultsHistory: Round[]) => {
-  if (matchResultsHistory.length !== 1) {
+  if (matchResultsHistory.length === 0) {
     return null;
   }
 
   validateIfRoundIsPlayed(matchResultsHistory.at(-1)!);
 
-  const finalResult = matchResultsHistory[0][0]!;
-  return finalResult.result === "home" ? finalResult.home : finalResult.away;
+  const lastRound = matchResultsHistory.at(-1)!;
+
+  const isFinal = lastRound.length === 1;
+
+  if (!isFinal) {
+    return null;
+  }
+
+  const finalResult = lastRound[0];
+  return finalResult.classified === "home"
+    ? finalResult.home
+    : finalResult.away;
 };
 
 const validateIfRoundIsPlayed = (round: Round) => {
   const areMissingResults = round.some(
-    (result) => result.result === null || result.classified
+    (result) => result.result === null || result.classified === null
   );
 
   if (areMissingResults) {
