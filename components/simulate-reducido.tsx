@@ -1,11 +1,9 @@
 "use client";
 
 import { positions, TeamPosition } from "@/app/positions-regular-zone";
-import { getImageURL } from "@/lib/utils";
-import Image from "next/image";
 import { useState } from "react";
+import { PromotionAnnouncement } from "./promotion-announcement";
 import { RoundForm } from "./round-form";
-import { Card, CardContent } from "./ui/card";
 
 const calculateMatchesFirstRound = () => {
   const { zoneA, zoneB } = positions;
@@ -64,28 +62,7 @@ export const SimulateReducido = () => {
 
   if (finalWinner && secondPromotion) {
     return (
-      <Card className="flex flex-col gap-6 p-6">
-        <CardContent>
-          <div className="flex justify-center gap-4">
-            <Image
-              src={getImageURL(finalWinner.imageSrc)}
-              alt={finalWinner.team}
-              width={72}
-              height={72}
-            />
-            <Image
-              src={getImageURL(secondPromotion.imageSrc)}
-              alt={secondPromotion.team}
-              width={72}
-              height={72}
-            />
-          </div>
-          <h3 className="text-3xl font-bold text-center">
-            {finalWinner.team} y {secondPromotion.team} <br /> ascienden a la
-            Primera División
-          </h3>
-        </CardContent>
-      </Card>
+      <PromotionAnnouncement promotions={[finalWinner, secondPromotion]} />
     );
   }
 
