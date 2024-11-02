@@ -1,9 +1,9 @@
 "use client";
 
 import { TeamPosition } from "@/app/positions-regular-zone";
+import { Result, resultSchema } from "@/lib/types";
 import { Trophy } from "lucide-react";
 import { useFormState } from "react-dom";
-import { z } from "zod";
 import { InputMatchPrediction } from "./input-match-prediction";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -22,7 +22,7 @@ const handleSubmit = (_: State, formData: FormData): State => {
   const matchResults: {
     home: string;
     away: string;
-    result: "home" | "away" | "draw";
+    result: Result;
   }[] = [];
 
   for (const key in data) {
@@ -32,9 +32,7 @@ const handleSubmit = (_: State, formData: FormData): State => {
 
     const [home, away] = key.split("-");
     const resultToCheck = data[key as keyof typeof data];
-    const resultParse = z
-      .enum(["home", "away", "draw"])
-      .safeParse(resultToCheck);
+    const resultParse = resultSchema.safeParse(resultToCheck);
 
     if (!resultParse.success) {
       return {

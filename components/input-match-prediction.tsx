@@ -1,6 +1,7 @@
 "use client";
 
 import { TeamPosition } from "@/app/positions-regular-zone";
+import { Result } from "@/lib/types";
 import { cn, getImageURL } from "@/lib/utils";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -17,12 +18,12 @@ export const InputMatchPrediction = ({
   allowDraw?: boolean;
   loserPassToNextRound?: boolean;
 }) => {
-  const [result, setResult] = useState<"home" | "away" | "draw" | null>(
+  const [result, setResult] = useState<Result | null>(
     allowDraw ? "draw" : null
   );
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (winner: "home" | "away" | "draw") => {
+  const handleChange = (winner: Result) => {
     setResult(winner);
     if (inputRef.current) {
       inputRef.current.value = winner;
