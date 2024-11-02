@@ -1,7 +1,11 @@
 "use client";
 
-import { TeamPosition } from "@/app/positions-regular-zone";
-import { PlayedMatchResult, resultSchema, Round } from "@/lib/types";
+import {
+  MatchResult,
+  PlayedMatchResult,
+  resultSchema,
+  Round,
+} from "@/lib/types";
 import { findTeam } from "@/lib/utils";
 import { Trophy } from "lucide-react";
 import { useFormState } from "react-dom";
@@ -99,7 +103,7 @@ export const RoundForm = ({
   roundName: string;
   matches: Round;
   children?: React.ReactNode;
-  firstPositionFinal?: { home: TeamPosition; away: TeamPosition };
+  firstPositionFinal?: MatchResult | null;
   onSubmit: (matchResults: PlayedMatchResult[]) => void;
 }) => {
   const [state, action] = useFormState(
@@ -131,6 +135,7 @@ export const RoundForm = ({
               loserPassToNextRound
               home={firstPositionFinal.home}
               away={firstPositionFinal.away}
+              defaultValue={firstPositionFinal.result}
             />
           </CardContent>
         </Card>

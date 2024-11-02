@@ -47,7 +47,14 @@ const final = {
   away: positions.zoneB[0],
 };
 
-const firstRoundMatches = calculateMatchesFirstRound();
+const firstRoundMatches = [
+  {
+    ...final,
+    result: null,
+    classified: null,
+  },
+  ...calculateMatchesFirstRound(),
+];
 
 const getNextRound = (round: PlayedRound): Round => {
   const classifiedTeamsPositions = round
@@ -81,21 +88,29 @@ const getNextRound = (round: PlayedRound): Round => {
   return nextRoundMatches;
 };
 
-const getFinalWinner = (matchResultsHistory: Round[]) => {
-  if (matchResultsHistory.length === 0) {
-    return null;
-  }
-
-  validateIfRoundIsPlayed(matchResultsHistory[0]);
-
-  const finalResult = matchResultsHistory[0].find(
+const getFinalResult = (firstRound: Round) => {
+  const finalResult = firstRound.find(
     (result) =>
       result.home.team === final.home.team &&
       result.away.team === final.away.team
   );
 
   if (!finalResult) {
-    throw new Error("Final result not found");
+    return null;
+  }
+
+  return finalResult;
+};
+
+const getFinalWinner = (firstRound: Round) => {
+  const finalResult = getFinalResult(firstRound);
+
+  if (!finalResult) {
+    return null;
+  }
+
+  if (!finalResult.result) {
+    return null;
   }
 
   const finalWinner = finalResult.result === "home" ? final.home : final.away;
@@ -103,70 +118,37 @@ const getFinalWinner = (matchResultsHistory: Round[]) => {
   return finalWinner;
 };
 
-const getSecondPromotion = (matchResultsHistory: Round[]) => {
-  if (matchResultsHistory.length === 0) {
-    return null;
+const getSecondPromotion = (currentRound: Round) => {
+  const haveChampionOfReducido =
+    currentRound.length === 1 &&
+    currentRound[0].home.team === currentRound[0].away.team;
+
+  if (haveChampionOfReducido) {
+    return currentRound[0].home;
   }
 
-  validateIfRoundIsPlayed(matchResultsHistory.at(-1)!);
-
-  const lastRound = matchResultsHistory.at(-1)!;
-
-  const isFinal = lastRound.length === 1;
-
-  if (!isFinal) {
-    return null;
-  }
-
-  const finalResult = lastRound[0];
-  return finalResult.classified === "home"
-    ? finalResult.home
-    : finalResult.away;
-};
-
-const validateIfRoundIsPlayed = (round: Round) => {
-  const areMissingResults = round.some(
-    (result) => result.result === null || result.classified === null
-  );
-
-  if (areMissingResults) {
-    throw new Error("Missing results");
-  }
-
-  return round as PlayedRound;
-};
-
-const getRoundMatches = (matchResultsHistory: Round[]) => {
-  const lastResults = matchResultsHistory.at(-1);
-
-  if (!lastResults) {
-    return firstRoundMatches.map((match) => ({
-      ...match,
-      result: null,
-      classified: null,
-    }));
-  }
-
-  validateIfRoundIsPlayed(lastResults);
-
-  // The cast is correct because I am checking not missing results
-  const nextRoundMatches = getNextRound(lastResults as PlayedRound);
-
-  return nextRoundMatches;
+  return null;
 };
 
 export const SimulateReducido = () => {
-  const [rounds, setRounds] = useState<Round[]>([]);
+  const [rounds, setRounds] = useState<Round[]>([
+    firstRoundMatches.map((match) => ({
+      ...match,
+      result: null,
+      classified: null,
+    })),
+  ]);
 
-  const roundMatches = getRoundMatches(rounds);
-  const finalWinner = getFinalWinner(rounds);
-  const secondPromotion = getSecondPromotion(rounds);
+  const [currentRound, setCurrentRound] = useState(0);
+
+  const roundMatches = rounds[currentRound];
+  const finalWinner = getFinalWinner(rounds[0]);
+  const secondPromotion = getSecondPromotion(roundMatches);
 
   const isFirstRound = roundMatches.length === firstRoundMatches.length;
 
   const roundName = {
-    // Is 7 because we have to sum the Final. The loser of the final pass to 4tos de final, and the winner promotes to 1st division.
-    [7]: "Octavos de final",
+    [8]: "Octavos de final",
     [4]: "Cuartos de final",
     [2]: "Semifinales",
     [1]: "Final",
@@ -194,7 +176,7 @@ export const SimulateReducido = () => {
           variant="ghost"
           className="w-fit"
           onClick={() => {
-            setRounds((prev) => prev.slice(0, -1));
+            setCurrentRound((prev) => prev - 1);
           }}
         >
           <ChevronLeft size={24} className="mr-2" />
@@ -203,10 +185,18 @@ export const SimulateReducido = () => {
       )}
       <RoundForm
         roundName={roundName}
-        matches={roundMatches}
-        firstPositionFinal={isFirstRound ? final : undefined}
+        matches={roundMatches.slice(isFirstRound ? 1 : 0)}
+        firstPositionFinal={
+          isFirstRound ? getFinalResult(rounds[0]) : undefined
+        }
         onSubmit={(roundResults) => {
-          setRounds((prev) => [...prev, roundResults]);
+          setRounds((prev) => {
+            const copy = [...prev];
+            copy[currentRound] = roundResults;
+            const nextRound = getNextRound(roundResults);
+            return [...copy.slice(0, currentRound + 1), nextRound];
+          });
+          setCurrentRound((prev) => prev + 1);
         }}
       />
     </div>
