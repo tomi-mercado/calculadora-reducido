@@ -3,7 +3,7 @@
 import { TeamPosition } from "@/app/positions-regular-zone";
 import { cn, getImageURL } from "@/lib/utils";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 
 export const InputMatchPrediction = ({
@@ -14,6 +14,16 @@ export const InputMatchPrediction = ({
   away: TeamPosition;
 }) => {
   const [winner, setWinner] = useState<"home" | "away" | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = (winner: "home" | "away") => {
+    setWinner(winner);
+    if (inputRef.current) {
+      inputRef.current.value = winner;
+    }
+  };
+
+  const name = `${home.team}-${away.team}`;
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -35,12 +45,12 @@ export const InputMatchPrediction = ({
             winner === "home" && "bg-green-800",
             winner === "away" && "bg-red-800"
           )}
-          onClick={() => setWinner("home")}
+          onClick={() => handleChange("home")}
         />
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setWinner("away")}
+          onClick={() => handleChange("away")}
           className={cn(
             "hover:bg-green-800/60",
             winner === "away" && "bg-green-800",
@@ -58,6 +68,8 @@ export const InputMatchPrediction = ({
           alt={away.team}
         />
       </div>
+
+      <input hidden readOnly name={name} ref={inputRef} />
     </div>
   );
 };
