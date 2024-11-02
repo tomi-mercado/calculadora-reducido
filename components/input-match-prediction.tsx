@@ -9,15 +9,19 @@ import { Button } from "./ui/button";
 export const InputMatchPrediction = ({
   home,
   away,
+  allowDraw,
 }: {
   home: TeamPosition;
   away: TeamPosition;
+  allowDraw?: boolean;
 }) => {
-  const [winner, setWinner] = useState<"home" | "away" | null>(null);
+  const [result, setResult] = useState<"home" | "away" | "draw" | null>(
+    allowDraw ? "draw" : null
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (winner: "home" | "away") => {
-    setWinner(winner);
+  const handleChange = (winner: "home" | "away" | "draw") => {
+    setResult(winner);
     if (inputRef.current) {
       inputRef.current.value = winner;
     }
@@ -43,11 +47,23 @@ export const InputMatchPrediction = ({
           type="button"
           className={cn(
             "hover:bg-green-800/60",
-            winner === "home" && "bg-green-800",
-            winner === "away" && "bg-red-800"
+            result === "home" && "bg-green-800",
+            result === "away" && "bg-red-800"
           )}
           onClick={() => handleChange("home")}
         />
+        {allowDraw && (
+          <Button
+            variant="outline"
+            size="icon"
+            type="button"
+            className={cn(
+              "hover:bg-yellow-400/60",
+              result === "draw" && "bg-yellow-400"
+            )}
+            onClick={() => handleChange("draw")}
+          />
+        )}
         <Button
           variant="outline"
           size="icon"
@@ -55,8 +71,8 @@ export const InputMatchPrediction = ({
           type="button"
           className={cn(
             "hover:bg-green-800/60",
-            winner === "away" && "bg-green-800",
-            winner === "home" && "bg-red-800"
+            result === "away" && "bg-green-800",
+            result === "home" && "bg-red-800"
           )}
         />
       </div>

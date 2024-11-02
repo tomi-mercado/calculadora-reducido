@@ -26,6 +26,7 @@ export const RoundForm = ({
               key={index}
               home={match.home}
               away={match.away}
+              allowDraw
             />
           ))}
         </CardContent>
