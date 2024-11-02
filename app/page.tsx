@@ -1,3 +1,6 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Trophy } from "lucide-react";
 import { positions } from "./positions-regular-zone";
 
 const calculateMatchesFirstRound = () => {
@@ -21,12 +24,24 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-6 items-center text-center py-6">
-      <div className="flex flex-col gap-2">
-        <h3 className="font-semibold text-xl">Final del primer puesto</h3>
-        <p>
-          {finalists[0].team} vs {finalists[1].team}
-        </p>
-      </div>
+      <Card className="border-primary">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl justify-center">
+            <Trophy className="h-6 w-6 text-primary" />
+            Final
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4 place-items-center">
+            <div className="whitespace-nowrap">{finalists[0].team}</div>
+            <div className="flex gap-2 w-24">
+              <Input className="text-center" />
+              <Input className="text-center" />
+            </div>
+            <div className="whitespace-nowrap">{finalists[1].team}</div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="flex flex-col gap-2">
         <h3 className="font-semibold text-xl">Octavos de final</h3>
