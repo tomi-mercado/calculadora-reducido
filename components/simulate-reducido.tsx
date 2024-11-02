@@ -130,14 +130,16 @@ const getSecondPromotion = (currentRound: Round) => {
   return null;
 };
 
+const initialStateRounds = [
+  firstRoundMatches.map((match) => ({
+    ...match,
+    result: null,
+    classified: null,
+  })),
+];
+
 export const SimulateReducido = () => {
-  const [rounds, setRounds] = useState<Round[]>([
-    firstRoundMatches.map((match) => ({
-      ...match,
-      result: null,
-      classified: null,
-    })),
-  ]);
+  const [rounds, setRounds] = useState<Round[]>(initialStateRounds);
 
   const [currentRound, setCurrentRound] = useState(0);
 
@@ -160,7 +162,8 @@ export const SimulateReducido = () => {
         <PromotionAnnouncement promotions={[finalWinner, secondPromotion]} />
         <Button
           onClick={() => {
-            setRounds([]);
+            setRounds(initialStateRounds);
+            setCurrentRound(0);
           }}
         >
           Volver a simular
