@@ -2,12 +2,18 @@
 
 import { TeamPosition } from "@/app/positions-regular-zone";
 import { Trophy } from "lucide-react";
+import { useFormState } from "react-dom";
 import { z } from "zod";
 import { InputMatchPrediction } from "./input-match-prediction";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-const handleSubmit = (formData: FormData) => {
+type State =
+  | { type: "idle" }
+  | { type: "error"; error: string }
+  | { type: "success"; teamsWhoClassify: string[] };
+
+const handleSubmit = (_: State, formData: FormData): State => {
   const entries = formData.entries();
   const data = Array.from(entries).reduce((acc, [key, value]) => {
     return { ...acc, [key]: value };
@@ -32,7 +38,8 @@ const handleSubmit = (formData: FormData) => {
 
     if (!resultParse.success) {
       return {
-        error: `Invalid value for ${key}`,
+        type: "error" as const,
+        error: `Debes indicar un resultado válido para ${home}-${away}`,
       };
     }
 
@@ -60,6 +67,7 @@ const handleSubmit = (formData: FormData) => {
       }
 
       return {
+        type: "error" as const,
         error: `Invalid value for ${match.home}-${match.away}. Loser can't pass to next round if it's a draw`,
       };
     }
@@ -75,7 +83,7 @@ const handleSubmit = (formData: FormData) => {
     }
   }
 
-  console.log(teamsWhoClassify);
+  return { type: "success" as const, teamsWhoClassify };
 };
 
 export const RoundForm = ({
@@ -86,29 +94,30 @@ export const RoundForm = ({
   roundName: string;
   matches: { home: TeamPosition; away: TeamPosition }[];
   children?: React.ReactNode;
-  firstPositionFinal: { home: TeamPosition; away: TeamPosition };
+  firstPositionFinal?: { home: TeamPosition; away: TeamPosition };
 }) => {
+  const [state, action] = useFormState(handleSubmit, { type: "idle" });
+  const errorToShow = state.type === "error" ? state.error : null;
+
   return (
-    <form
-      className="flex flex-col gap-6"
-      // @ts-expect-error me pudrí de pelear con las versiones de ts
-      action={handleSubmit}
-    >
-      <Card className="border-primary">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl justify-center">
-            <Trophy className="h-6 w-6 text-primary" />
-            Final
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <InputMatchPrediction
-            loserPassToNextRound
-            home={firstPositionFinal.home}
-            away={firstPositionFinal.away}
-          />
-        </CardContent>
-      </Card>
+    <form className="flex flex-col gap-6" action={action}>
+      {firstPositionFinal && (
+        <Card className="border-primary">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl justify-center">
+              <Trophy className="h-6 w-6 text-primary" />
+              Final
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <InputMatchPrediction
+              loserPassToNextRound
+              home={firstPositionFinal.home}
+              away={firstPositionFinal.away}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -125,6 +134,8 @@ export const RoundForm = ({
           ))}
         </CardContent>
       </Card>
+
+      {errorToShow && <p className="text-red-500">{errorToShow}</p>}
 
       <Button>Next round</Button>
     </form>
