@@ -40,6 +40,7 @@ export const InputMatchPrediction = ({
         <Button
           variant="outline"
           size="icon"
+          type="button"
           className={cn(
             "hover:bg-green-800/60",
             winner === "home" && "bg-green-800",
@@ -51,6 +52,7 @@ export const InputMatchPrediction = ({
           variant="outline"
           size="icon"
           onClick={() => handleChange("away")}
+          type="button"
           className={cn(
             "hover:bg-green-800/60",
             winner === "away" && "bg-green-800",
@@ -58,7 +60,7 @@ export const InputMatchPrediction = ({
           )}
         />
       </div>
-      <div className="inline-flex items-center gap-2 whitespace-nowrap text-right">
+      <div className="inline-flex items-center gap-2 whitespace-nowrap text-right justify-end">
         {away.team}
 
         <Image

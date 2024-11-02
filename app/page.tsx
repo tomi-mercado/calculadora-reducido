@@ -24,20 +24,20 @@ export default function Home() {
   const finalists = [positions.zoneA[0], positions.zoneB[0]];
 
   return (
-    <div className="flex flex-col gap-6 items-center text-center py-6">
-      <Card className="border-primary">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl justify-center">
-            <Trophy className="h-6 w-6 text-primary" />
-            Final
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <InputMatchPrediction home={finalists[0]} away={finalists[1]} />
-        </CardContent>
-      </Card>
-
-      <RoundForm roundName="First Round" matches={firstRoundMatches} />
+    <div className="mx-auto max-w-3xl py-6">
+      <RoundForm roundName="Octavos de final" matches={firstRoundMatches}>
+        <Card className="border-primary">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl justify-center">
+              <Trophy className="h-6 w-6 text-primary" />
+              Final
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <InputMatchPrediction home={finalists[0]} away={finalists[1]} />
+          </CardContent>
+        </Card>
+      </RoundForm>
     </div>
   );
 }
