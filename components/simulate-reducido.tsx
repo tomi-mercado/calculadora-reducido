@@ -84,7 +84,7 @@ const getRoundMatches = (teamsWhoClassifyHistory: string[][]) => {
         const ptsA = a.pts;
         const ptsB = b.pts;
 
-        return ptsA < ptsB ? 1 : -1;
+        return ptsA > ptsB ? 1 : -1;
       }
 
       return a.position < b.position ? 1 : -1;
