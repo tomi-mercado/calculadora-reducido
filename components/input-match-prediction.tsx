@@ -1,7 +1,8 @@
 "use client";
 
 import { TeamPosition } from "@/app/positions-regular-zone";
-import { cn } from "@/lib/utils";
+import { cn, getImageURL } from "@/lib/utils";
+import Image from "next/image";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
@@ -16,7 +17,15 @@ export const InputMatchPrediction = ({
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <div className="whitespace-nowrap text-left">{home.team}</div>
+      <div className="inline-flex items-center whitespace-nowrap text-left gap-2">
+        <Image
+          src={getImageURL(home.imageSrc)}
+          width={24}
+          height={24}
+          alt={home.team}
+        />
+        {home.team}
+      </div>
       <div className="flex gap-2 justify-center">
         <Button
           variant="outline"
@@ -39,7 +48,16 @@ export const InputMatchPrediction = ({
           )}
         />
       </div>
-      <div className="whitespace-nowrap text-right">{away.team}</div>
+      <div className="inline-flex items-center gap-2 whitespace-nowrap text-right">
+        {away.team}
+
+        <Image
+          src={getImageURL(away.imageSrc)}
+          width={24}
+          height={24}
+          alt={away.team}
+        />
+      </div>
     </div>
   );
 };
