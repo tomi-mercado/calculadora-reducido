@@ -1,7 +1,7 @@
 "use client";
 
 import { TeamPosition } from "@/app/positions-regular-zone";
-import { PlayedMatchResult, resultSchema } from "@/lib/types";
+import { PlayedMatchResult, resultSchema, Round } from "@/lib/types";
 import { findTeam } from "@/lib/utils";
 import { Trophy } from "lucide-react";
 import { useFormState } from "react-dom";
@@ -97,7 +97,7 @@ export const RoundForm = ({
   onSubmit,
 }: {
   roundName: string;
-  matches: { home: TeamPosition; away: TeamPosition }[];
+  matches: Round;
   children?: React.ReactNode;
   firstPositionFinal?: { home: TeamPosition; away: TeamPosition };
   onSubmit: (matchResults: PlayedMatchResult[]) => void;
@@ -147,6 +147,7 @@ export const RoundForm = ({
               home={match.home}
               away={match.away}
               allowDraw={matches.length !== 1}
+              defaultValue={match.result}
             />
           ))}
         </CardContent>

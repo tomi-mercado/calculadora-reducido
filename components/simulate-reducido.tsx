@@ -140,7 +140,11 @@ const getRoundMatches = (matchResultsHistory: Round[]) => {
   const lastResults = matchResultsHistory.at(-1);
 
   if (!lastResults) {
-    return firstRoundMatches;
+    return firstRoundMatches.map((match) => ({
+      ...match,
+      result: null,
+      classified: null,
+    }));
   }
 
   validateIfRoundIsPlayed(lastResults);

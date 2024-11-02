@@ -12,15 +12,16 @@ export const InputMatchPrediction = ({
   away,
   allowDraw,
   loserPassToNextRound,
+  defaultValue: _defaultValue,
 }: {
   home: TeamPosition;
   away: TeamPosition;
   allowDraw?: boolean;
   loserPassToNextRound?: boolean;
+  defaultValue?: Result | null;
 }) => {
-  const [result, setResult] = useState<Result | null>(
-    allowDraw ? "draw" : null
-  );
+  const defaultValue = _defaultValue || (allowDraw ? "draw" : null);
+  const [result, setResult] = useState<Result | null>(defaultValue);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (winner: Result) => {
@@ -105,7 +106,7 @@ export const InputMatchPrediction = ({
         name={name}
         ref={inputRef}
         required={!allowDraw}
-        defaultValue={allowDraw ? "draw" : ""}
+        defaultValue={defaultValue ?? ""}
       />
       <input
         hidden
