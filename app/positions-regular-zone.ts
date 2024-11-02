@@ -27,7 +27,7 @@ const ZONE_A_POSITIONS = [
   },
   {
     position: 3,
-    team: "Quilmes*",
+    team: "Quilmes",
     pts: 60,
     pj: 38,
     pg: 17,
@@ -160,7 +160,7 @@ const ZONE_B_POSITIONS = [
   },
   {
     position: 5,
-    team: "San Telmo*",
+    team: "San Telmo",
     pts: 62,
     pj: 38,
     pg: 18,
