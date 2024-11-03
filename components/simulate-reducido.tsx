@@ -195,7 +195,7 @@ export const SimulateReducido = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {!!rounds.length && (
+      {currentRound > 0 && (
         <Button
           variant="ghost"
           className="w-fit"
