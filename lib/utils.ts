@@ -126,7 +126,7 @@ const REDUCIDO_RESULTS: MatchResult[] = [
     home: findTeam("San Martin (SJ)"),
     away: findTeam("Gimnasia (S)"),
     classified: "home",
-    result: "draw",
+    result: "home",
     isResultFromReality: true,
   },
 ];
