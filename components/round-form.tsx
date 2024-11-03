@@ -144,7 +144,7 @@ export const RoundForm = ({
       {firstPositionFinal && (
         <Card className="border-primary">
           <CardHeader className="text-center items-center">
-            <CardTitle className="flex items-center gap-2 text-2xl justify-center">
+            <CardTitle className="flex items-center gap-2 text-xl sm:text-2xl justify-center">
               <Trophy className="h-6 w-6 text-primary" />
               Final
             </CardTitle>
@@ -166,7 +166,7 @@ export const RoundForm = ({
 
       <Card>
         <CardHeader className="text-center items-center">
-          <CardTitle className="text-2xl">{roundName}</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl">{roundName}</CardTitle>
           <CardDescription className="sm:w-2/3">
             {roundDescription}
           </CardDescription>
