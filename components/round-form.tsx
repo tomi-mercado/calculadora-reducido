@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/hooks/use-toast";
 import { FINAL_DESCRIPTION } from "@/lib/round-descriptions";
 import {
   MatchResult,
@@ -116,7 +117,8 @@ export const RoundForm = ({
   firstPositionFinal?: MatchResult | null;
   onSubmit: (matchResults: PlayedMatchResult[]) => void;
 }) => {
-  const [state, action] = useFormState(
+  const { toast } = useToast();
+  const [, action] = useFormState(
     (prevState: State, formData: FormData) => {
       const retVal = handleSubmit(prevState, formData);
 
@@ -124,11 +126,18 @@ export const RoundForm = ({
         onSubmit(retVal.matchResults);
       }
 
+      if (retVal.type === "error") {
+        toast({
+          title: "Error",
+          description: retVal.error,
+          variant: "destructive",
+        });
+      }
+
       return retVal;
     },
     { type: "idle" }
   );
-  const errorToShow = state.type === "error" ? state.error : null;
 
   return (
     <form className="flex flex-col gap-6" action={action}>
@@ -180,8 +189,6 @@ export const RoundForm = ({
           ))}
         </CardContent>
       </Card>
-
-      {errorToShow && <p className="text-red-500">{errorToShow}</p>}
 
       <Button>
         {matches.length === 1 ? "Ver ascensos" : "Siguiente ronda"}
