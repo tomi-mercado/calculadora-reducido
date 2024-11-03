@@ -147,7 +147,7 @@ export const RoundForm = ({
         <CardHeader>
           <CardTitle className="text-2xl text-center">{roundName}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="grid gap-4 grid-cols-1 lg:grid-cols-2">
           {matches.map((match) => (
             <InputMatchPrediction
               key={`${match.home.team}-${match.away.team}`}

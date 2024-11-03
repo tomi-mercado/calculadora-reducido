@@ -58,11 +58,6 @@ export const SimulateReducido = ({
   initialStateRounds: Round[];
   skippedRounds: Round[];
 }) => {
-  // const [isMounted, setIsMounted] = useState(false);
-  // useEffect(() => {
-  //   setIsMounted(true);
-  // }, []);
-
   const [rounds, setRounds] = useState<Round[]>(initialStateRounds);
 
   const [currentRound, setCurrentRound] = useState(skippedRounds.length);
@@ -86,10 +81,6 @@ export const SimulateReducido = ({
     [2]: "Semifinales",
     [1]: "Final",
   }[roundMatches.length]!;
-
-  // if (!isMounted) {
-  //   return null;
-  // }
 
   if (finalWinner && secondPromotion) {
     return (

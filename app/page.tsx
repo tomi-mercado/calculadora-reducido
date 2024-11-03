@@ -1,7 +1,6 @@
 import { REDUCIDO_RESULTS } from "@/app/reducido-results";
-import { PlayedRound, Round } from "@/lib/types";
-
 import { SimulateReducido } from "@/components/simulate-reducido";
+import { PlayedRound, Round } from "@/lib/types";
 import { getNextRound } from "@/lib/utils";
 import { firstRoundMatches } from "./first-round-data";
 

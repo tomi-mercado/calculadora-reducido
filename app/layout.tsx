@@ -1,3 +1,5 @@
+import { Footer } from "@/components/footer";
+import { Navbar } from "@/components/navbar";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -14,8 +16,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Reducido Primera Nacional",
-  description: "Calculadora para el reducido de la Primera Nacional",
+  title: "Calculadora Reducido Primera Nacional",
+  description:
+    "Calculadora para visualizar posibles partidos en el reducido de la Primera Nacional",
 };
 
 export default function RootLayout({
@@ -26,9 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <main className="mx-auto max-w-3xl py-6 px-4">{children}</main>
+        <Navbar />
+        <main className="mx-auto max-w-3xl lg:max-w-6xl py-10 px-4 w-full">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
