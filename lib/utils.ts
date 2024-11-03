@@ -101,6 +101,13 @@ const REDUCIDO_RESULTS: MatchResult[] = [
     result: "home",
     isResultFromReality: true,
   },
+  {
+    home: findTeam("Nueva Chicago"),
+    away: findTeam("Racing (C)"),
+    classified: "home",
+    result: "draw",
+    isResultFromReality: true,
+  },
 ];
 
 export const replaceWithRealResults = (
