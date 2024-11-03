@@ -122,6 +122,13 @@ const REDUCIDO_RESULTS: MatchResult[] = [
     result: "draw",
     isResultFromReality: true,
   },
+  {
+    home: findTeam("San Martin (SJ)"),
+    away: findTeam("Gimnasia (S)"),
+    classified: "home",
+    result: "draw",
+    isResultFromReality: true,
+  },
 ];
 
 export const replaceWithRealResults = (
