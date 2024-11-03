@@ -1,7 +1,7 @@
-import { PlayedMatchResult } from "@/lib/types";
+import { MatchResult } from "@/lib/types";
 import { findTeam } from "@/lib/utils";
 
-export const REDUCIDO_RESULTS: PlayedMatchResult[] = [
+export const REDUCIDO_RESULTS: MatchResult[] = [
   {
     home: findTeam("Quilmes"),
     away: findTeam("Def. de Belgrano"),

@@ -4,24 +4,14 @@ import { z } from "zod";
 export const resultSchema = z.enum(["home", "away", "draw"]);
 export type Result = z.infer<typeof resultSchema>;
 
-export type PlayedMatchResult = {
+// const matchResultSchema
+
+export type MatchResult = {
   home: TeamPosition;
   away: TeamPosition;
-  result: Result;
-  classified: "home" | "away";
+  result: Result | null;
+  classified: "home" | "away" | null;
   isResultFromReality: boolean;
 };
 
-type NotPlayedMatchResult = {
-  home: TeamPosition;
-  away: TeamPosition;
-  result: null;
-  classified: null;
-  isResultFromReality: false;
-};
-
-export type MatchResult = PlayedMatchResult | NotPlayedMatchResult;
-
 export type Round = MatchResult[];
-
-export type PlayedRound = PlayedMatchResult[];

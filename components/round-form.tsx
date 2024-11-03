@@ -2,12 +2,7 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { FINAL_DESCRIPTION } from "@/lib/round-descriptions";
-import {
-  MatchResult,
-  PlayedMatchResult,
-  resultSchema,
-  Round,
-} from "@/lib/types";
+import { MatchResult, resultSchema, Round } from "@/lib/types";
 import { cn, findTeam } from "@/lib/utils";
 import { Trophy } from "lucide-react";
 import { useFormState } from "react-dom";
@@ -24,7 +19,7 @@ import {
 type State =
   | { type: "idle" }
   | { type: "error"; error: string }
-  | { type: "success"; matchResults: PlayedMatchResult[] };
+  | { type: "success"; matchResults: MatchResult[] };
 
 const handleSubmit = (_: State, formData: FormData): State => {
   const entries = formData.entries();
@@ -32,7 +27,7 @@ const handleSubmit = (_: State, formData: FormData): State => {
     return { ...acc, [key]: value };
   }, {});
 
-  const matchResults: Omit<PlayedMatchResult, "classified">[] = [];
+  const matchResults: Omit<MatchResult, "classified">[] = [];
   const matchesInWhichPassLoser: string[] = [];
 
   for (const key in data) {
@@ -64,7 +59,7 @@ const handleSubmit = (_: State, formData: FormData): State => {
     matchResults.push({ home, away, result, isResultFromReality: false });
   }
 
-  const matchResultsWithClassified: PlayedMatchResult[] = [];
+  const matchResultsWithClassified: MatchResult[] = [];
 
   for (const match of matchResults) {
     const loserPassToNextRound = matchesInWhichPassLoser.includes(
@@ -115,7 +110,7 @@ export const RoundForm = ({
   matches: Round;
   children?: React.ReactNode;
   firstPositionFinal?: MatchResult | null;
-  onSubmit: (matchResults: PlayedMatchResult[]) => void;
+  onSubmit: (matchResults: MatchResult[]) => void;
 }) => {
   const { toast } = useToast();
   const [, action] = useFormState(

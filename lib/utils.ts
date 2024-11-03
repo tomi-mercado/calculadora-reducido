@@ -5,7 +5,7 @@ import {
 } from "@/app/positions-regular-zone";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { PlayedMatchResult, PlayedRound, Round } from "./types";
+import { MatchResult, Round } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -41,7 +41,7 @@ export const defineVentajaDeportiva = (
   return teamA.position < teamB.position ? teamA : teamB;
 };
 
-export const getNextRound = (round: PlayedRound): Round => {
+export const getNextRound = (round: Round): Round => {
   const classifiedTeamsPositions = round
     .map((result) => (result.classified === "home" ? result.home : result.away))
     .sort((a, b) => {
@@ -79,7 +79,7 @@ export const getNextRound = (round: PlayedRound): Round => {
   return nextRoundMatches;
 };
 
-const REDUCIDO_RESULTS: PlayedMatchResult[] = [
+const REDUCIDO_RESULTS: MatchResult[] = [
   {
     home: findTeam("Quilmes"),
     away: findTeam("Def. de Belgrano"),
@@ -126,10 +126,10 @@ export const replaceWithRealResults = (
   );
 
   if (allIsReality) {
-    return replaceWithRealResults(
-      getNextRound(roundWithReality as PlayedRound),
-      [...skippedRoundsUntilNow, roundWithReality]
-    );
+    return replaceWithRealResults(getNextRound(roundWithReality as Round), [
+      ...skippedRoundsUntilNow,
+      roundWithReality,
+    ]);
   }
 
   return {
