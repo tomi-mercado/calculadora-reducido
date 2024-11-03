@@ -148,7 +148,7 @@ export const RoundForm = ({
               <Trophy className="h-6 w-6 text-primary" />
               Final
             </CardTitle>
-            <CardDescription className="w-2/3">
+            <CardDescription className="sm:w-2/3">
               {FINAL_DESCRIPTION}
             </CardDescription>
           </CardHeader>
@@ -167,7 +167,7 @@ export const RoundForm = ({
       <Card>
         <CardHeader className="text-center items-center">
           <CardTitle className="text-2xl">{roundName}</CardTitle>
-          <CardDescription className="w-2/3">
+          <CardDescription className="sm:w-2/3">
             {roundDescription}
           </CardDescription>
         </CardHeader>
