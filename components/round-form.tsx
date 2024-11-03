@@ -148,18 +148,16 @@ export const RoundForm = ({
           <CardTitle className="text-2xl text-center">{roundName}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {matches
-            .sort((a) => (a.isResultFromReality ? 1 : -1))
-            .map((match) => (
-              <InputMatchPrediction
-                key={`${match.home.team}-${match.away.team}`}
-                home={match.home}
-                away={match.away}
-                allowDraw={matches.length !== 1}
-                defaultValue={match.result}
-                disabled={match.isResultFromReality}
-              />
-            ))}
+          {matches.map((match) => (
+            <InputMatchPrediction
+              key={`${match.home.team}-${match.away.team}`}
+              home={match.home}
+              away={match.away}
+              allowDraw={matches.length !== 1}
+              defaultValue={match.result}
+              disabled={match.isResultFromReality}
+            />
+          ))}
         </CardContent>
       </Card>
 

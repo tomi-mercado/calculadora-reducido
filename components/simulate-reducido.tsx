@@ -1,99 +1,13 @@
 "use client";
 
-import { positions } from "@/app/positions-regular-zone";
-import { REDUCIDO_RESULTS } from "@/app/reducido-results";
-import { PlayedRound, Round } from "@/lib/types";
-import { defineVentajaDeportiva } from "@/lib/utils";
+import { final, firstRoundMatches } from "@/app/first-round-data";
+import { Round } from "@/lib/types";
+import { getNextRound } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { PromotionAnnouncement } from "./promotion-announcement";
 import { RoundForm } from "./round-form";
 import { Button } from "./ui/button";
-
-const calculateMatchesFirstRound = () => {
-  const { zoneA, zoneB } = positions;
-  const zoneAWithoutFirst = zoneA.slice(1);
-  const zoneBWithoutFirst = zoneB.slice(1);
-
-  return zoneAWithoutFirst.map((team, index) => {
-    const teamA = { ...team };
-    const teamB = {
-      ...zoneBWithoutFirst[zoneBWithoutFirst.length - 1 - index],
-    };
-
-    const haveSamePosition = teamA.position === teamB.position;
-
-    if (haveSamePosition) {
-      const localTeam = teamA.pts > teamB.pts ? teamA : teamB;
-      const visitorTeam = teamA.pts > teamB.pts ? teamB : teamA;
-
-      return {
-        home: localTeam,
-        away: visitorTeam,
-      };
-    }
-
-    const localTeam = teamA.position < teamB.position ? teamA : teamB;
-    const visitorTeam = teamA.position < teamB.position ? teamB : teamA;
-
-    return {
-      home: localTeam,
-      away: visitorTeam,
-    };
-  });
-};
-
-const final = {
-  home: positions.zoneA[0],
-  away: positions.zoneB[0],
-};
-
-const firstRoundMatches = [
-  {
-    ...final,
-    result: null,
-    classified: null,
-  },
-  ...calculateMatchesFirstRound(),
-];
-
-const getNextRound = (round: PlayedRound): Round => {
-  const classifiedTeamsPositions = round
-    .map((result) => (result.classified === "home" ? result.home : result.away))
-    .sort((a, b) => {
-      const betterVentajaDeportiva = defineVentajaDeportiva(a, b);
-      return a.team === betterVentajaDeportiva.team ? 1 : -1;
-    });
-
-  const nextRoundMatches: Round = [];
-
-  for (let i = 0; i < round.length; i += 2) {
-    const teamA = classifiedTeamsPositions[i];
-    const teamB =
-      classifiedTeamsPositions[classifiedTeamsPositions.length - 1 - i];
-
-    const home =
-      classifiedTeamsPositions.indexOf(teamA) >
-      classifiedTeamsPositions.indexOf(teamB)
-        ? teamA
-        : teamB;
-    const away =
-      classifiedTeamsPositions.indexOf(teamA) >
-      classifiedTeamsPositions.indexOf(teamB)
-        ? teamB
-        : teamA;
-
-    nextRoundMatches.push({
-      home,
-      away,
-      classified: null,
-      result: null,
-      isResultFromReality: false,
-    });
-  }
-
-  return nextRoundMatches;
-};
 
 const getFinalResult = (firstRound: Round) => {
   const finalResult = firstRound.find(
@@ -137,38 +51,34 @@ const getSecondPromotion = (currentRound: Round) => {
   return null;
 };
 
-const replaceWithRealResults = (round: Round) => {
-  return round.map((match) => {
-    const { home, away } = match;
+export const SimulateReducido = ({
+  initialStateRounds,
+  skippedRounds,
+}: {
+  initialStateRounds: Round[];
+  skippedRounds: Round[];
+}) => {
+  // const [isMounted, setIsMounted] = useState(false);
+  // useEffect(() => {
+  //   setIsMounted(true);
+  // }, []);
 
-    const resultInReality = REDUCIDO_RESULTS.find(
-      (result) =>
-        result.home.team === home.team && result.away.team === away.team
-    );
-
-    return resultInReality ?? match;
-  });
-};
-
-const initialStateRounds = [
-  firstRoundMatches.map((match) => ({
-    ...match,
-    result: null,
-    classified: null,
-    isResultFromReality: false as const,
-  })),
-];
-
-export const SimulateReducido = () => {
   const [rounds, setRounds] = useState<Round[]>(initialStateRounds);
 
-  const [currentRound, setCurrentRound] = useState(0);
+  const [currentRound, setCurrentRound] = useState(skippedRounds.length);
 
-  const roundMatches = replaceWithRealResults(rounds[currentRound]);
+  const roundMatches = rounds[currentRound];
   const finalWinner = getFinalWinner(rounds[0]);
   const secondPromotion = getSecondPromotion(roundMatches);
 
   const isFirstRound = roundMatches.length === firstRoundMatches.length;
+
+  const everythingWasReality = rounds.every((round) =>
+    round.every(
+      (match) =>
+        match.isResultFromReality || match.home.team === match.away.team
+    )
+  );
 
   const roundName = {
     [8]: "Octavos de final",
@@ -177,18 +87,24 @@ export const SimulateReducido = () => {
     [1]: "Final",
   }[roundMatches.length]!;
 
+  // if (!isMounted) {
+  //   return null;
+  // }
+
   if (finalWinner && secondPromotion) {
     return (
       <div className="flex flex-col gap-6">
         <PromotionAnnouncement promotions={[finalWinner, secondPromotion]} />
-        <Button
-          onClick={() => {
-            setRounds(initialStateRounds);
-            setCurrentRound(0);
-          }}
-        >
-          Volver a simular
-        </Button>
+        {!everythingWasReality && (
+          <Button
+            onClick={() => {
+              setRounds(initialStateRounds);
+              setCurrentRound(skippedRounds.length);
+            }}
+          >
+            Volver a simular
+          </Button>
+        )}
       </div>
     );
   }
