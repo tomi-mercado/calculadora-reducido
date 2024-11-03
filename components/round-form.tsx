@@ -53,7 +53,7 @@ const handleSubmit = (_: State, formData: FormData): State => {
     const away = findTeam(awayTeam);
     const result = resultParse.data;
 
-    matchResults.push({ home, away, result });
+    matchResults.push({ home, away, result, isResultFromReality: false });
   }
 
   const matchResultsWithClassified: PlayedMatchResult[] = [];
@@ -76,6 +76,7 @@ const handleSubmit = (_: State, formData: FormData): State => {
         away: match.away,
         result: match.result,
         classified: match.result === "home" ? "away" : "home",
+        isResultFromReality: false,
       });
 
       continue;
@@ -136,6 +137,7 @@ export const RoundForm = ({
               home={firstPositionFinal.home}
               away={firstPositionFinal.away}
               defaultValue={firstPositionFinal.result}
+              disabled={firstPositionFinal.isResultFromReality}
             />
           </CardContent>
         </Card>
@@ -146,15 +148,18 @@ export const RoundForm = ({
           <CardTitle className="text-2xl text-center">{roundName}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {matches.map((match) => (
-            <InputMatchPrediction
-              key={`${match.home.team}-${match.away.team}`}
-              home={match.home}
-              away={match.away}
-              allowDraw={matches.length !== 1}
-              defaultValue={match.result}
-            />
-          ))}
+          {matches
+            .sort((a) => (a.isResultFromReality ? 1 : -1))
+            .map((match) => (
+              <InputMatchPrediction
+                key={`${match.home.team}-${match.away.team}`}
+                home={match.home}
+                away={match.away}
+                allowDraw={matches.length !== 1}
+                defaultValue={match.result}
+                disabled={match.isResultFromReality}
+              />
+            ))}
         </CardContent>
       </Card>
 

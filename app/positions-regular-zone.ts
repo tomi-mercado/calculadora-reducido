@@ -1,7 +1,7 @@
 const ZONE_A_POSITIONS = [
   {
     position: 1,
-    team: "San Martin (T)",
+    team: "San Martin (T)" as const,
     pts: 81,
     pj: 38,
     pg: 24,
@@ -14,7 +14,7 @@ const ZONE_A_POSITIONS = [
   },
   {
     position: 2,
-    team: "San Martin (SJ)",
+    team: "San Martin (SJ)" as const,
     pts: 70,
     pj: 38,
     pg: 19,
@@ -27,7 +27,7 @@ const ZONE_A_POSITIONS = [
   },
   {
     position: 3,
-    team: "Quilmes",
+    team: "Quilmes" as const,
     pts: 60,
     pj: 38,
     pg: 17,
@@ -40,7 +40,7 @@ const ZONE_A_POSITIONS = [
   },
   {
     position: 4,
-    team: "All Boys",
+    team: "All Boys" as const,
     pts: 58,
     pj: 38,
     pg: 15,
@@ -53,7 +53,7 @@ const ZONE_A_POSITIONS = [
   },
   {
     position: 5,
-    team: "Gimnasia (J)",
+    team: "Gimnasia (J)" as const,
     pts: 58,
     pj: 38,
     pg: 17,
@@ -66,7 +66,7 @@ const ZONE_A_POSITIONS = [
   },
   {
     position: 6,
-    team: "Estudiantes (BA)",
+    team: "Estudiantes (BA)" as const,
     pts: 56,
     pj: 38,
     pg: 14,
@@ -79,7 +79,7 @@ const ZONE_A_POSITIONS = [
   },
   {
     position: 7,
-    team: "Racing (C)",
+    team: "Racing (C)" as const,
     pts: 53,
     pj: 38,
     pg: 14,
@@ -92,7 +92,7 @@ const ZONE_A_POSITIONS = [
   },
   {
     position: 8,
-    team: "San Miguel",
+    team: "San Miguel" as const,
     pts: 53,
     pj: 38,
     pg: 13,
@@ -108,7 +108,7 @@ const ZONE_A_POSITIONS = [
 const ZONE_B_POSITIONS = [
   {
     position: 1,
-    team: "Aldosivi",
+    team: "Aldosivi" as const,
     pts: 64,
     pj: 38,
     pg: 17,
@@ -121,7 +121,7 @@ const ZONE_B_POSITIONS = [
   },
   {
     position: 2,
-    team: "Dep. Madryn",
+    team: "Dep. Madryn" as const,
     pts: 64,
     pj: 38,
     pg: 17,
@@ -134,7 +134,7 @@ const ZONE_B_POSITIONS = [
   },
   {
     position: 3,
-    team: "Nueva Chicago",
+    team: "Nueva Chicago" as const,
     pts: 64,
     pj: 38,
     pg: 18,
@@ -147,7 +147,7 @@ const ZONE_B_POSITIONS = [
   },
   {
     position: 4,
-    team: "Gimnasia (M)",
+    team: "Gimnasia (M)" as const,
     pts: 63,
     pj: 38,
     pg: 17,
@@ -160,7 +160,7 @@ const ZONE_B_POSITIONS = [
   },
   {
     position: 5,
-    team: "San Telmo",
+    team: "San Telmo" as const,
     pts: 62,
     pj: 38,
     pg: 18,
@@ -173,7 +173,7 @@ const ZONE_B_POSITIONS = [
   },
   {
     position: 6,
-    team: "Colon",
+    team: "Colon" as const,
     pts: 58,
     pj: 38,
     pg: 16,
@@ -186,7 +186,7 @@ const ZONE_B_POSITIONS = [
   },
   {
     position: 7,
-    team: "Def. de Belgrano",
+    team: "Def. de Belgrano" as const,
     pts: 58,
     pj: 38,
     pg: 15,
@@ -199,7 +199,7 @@ const ZONE_B_POSITIONS = [
   },
   {
     position: 8,
-    team: "Gimnasia (S)",
+    team: "Gimnasia (S)" as const,
     pts: 58,
     pj: 38,
     pg: 14,
@@ -217,4 +217,8 @@ export const positions = {
   zoneB: ZONE_B_POSITIONS,
 };
 
-export type TeamPosition = (typeof ZONE_A_POSITIONS)[number];
+export type TeamPosition = (
+  | typeof ZONE_A_POSITIONS
+  | typeof ZONE_B_POSITIONS
+)[number];
+export type TeamName = TeamPosition["team"];

@@ -1,6 +1,7 @@
 "use client";
 
 import { positions } from "@/app/positions-regular-zone";
+import { REDUCIDO_RESULTS } from "@/app/reducido-results";
 import { PlayedRound, Round } from "@/lib/types";
 import { defineVentajaDeportiva } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
@@ -82,7 +83,13 @@ const getNextRound = (round: PlayedRound): Round => {
         ? teamB
         : teamA;
 
-    nextRoundMatches.push({ home, away, classified: null, result: null });
+    nextRoundMatches.push({
+      home,
+      away,
+      classified: null,
+      result: null,
+      isResultFromReality: false,
+    });
   }
 
   return nextRoundMatches;
@@ -130,11 +137,25 @@ const getSecondPromotion = (currentRound: Round) => {
   return null;
 };
 
+const replaceWithRealResults = (round: Round) => {
+  return round.map((match) => {
+    const { home, away } = match;
+
+    const resultInReality = REDUCIDO_RESULTS.find(
+      (result) =>
+        result.home.team === home.team && result.away.team === away.team
+    );
+
+    return resultInReality ?? match;
+  });
+};
+
 const initialStateRounds = [
   firstRoundMatches.map((match) => ({
     ...match,
     result: null,
     classified: null,
+    isResultFromReality: false as const,
   })),
 ];
 
@@ -143,7 +164,7 @@ export const SimulateReducido = () => {
 
   const [currentRound, setCurrentRound] = useState(0);
 
-  const roundMatches = rounds[currentRound];
+  const roundMatches = replaceWithRealResults(rounds[currentRound]);
   const finalWinner = getFinalWinner(rounds[0]);
   const secondPromotion = getSecondPromotion(roundMatches);
 

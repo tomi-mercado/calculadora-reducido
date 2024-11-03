@@ -13,12 +13,14 @@ export const InputMatchPrediction = ({
   allowDraw,
   loserPassToNextRound,
   defaultValue: _defaultValue,
+  disabled,
 }: {
   home: TeamPosition;
   away: TeamPosition;
   allowDraw?: boolean;
   loserPassToNextRound?: boolean;
   defaultValue?: Result | null;
+  disabled?: boolean;
 }) => {
   const defaultValue = _defaultValue || (allowDraw ? "draw" : null);
   const [result, setResult] = useState<Result | null>(defaultValue);
@@ -56,6 +58,7 @@ export const InputMatchPrediction = ({
               result === "home" && "bg-green-800",
               result === "away" && "bg-red-800"
             )}
+            disabled={disabled}
             onClick={() => handleChange("home")}
           />
           {allowDraw && (
@@ -67,6 +70,7 @@ export const InputMatchPrediction = ({
                 "hover:bg-yellow-400/60 border border-white/10",
                 result === "draw" && "bg-yellow-400 text-black"
               )}
+              disabled={disabled}
               onClick={() => handleChange("draw")}
             />
           )}
@@ -80,6 +84,7 @@ export const InputMatchPrediction = ({
               result === "away" && "bg-green-800",
               result === "home" && "bg-red-800"
             )}
+            disabled={disabled}
           />
         </div>
         <div className="xs:hidden text-center">

@@ -1,4 +1,8 @@
-import { positions, TeamPosition } from "@/app/positions-regular-zone";
+import {
+  positions,
+  TeamName,
+  TeamPosition,
+} from "@/app/positions-regular-zone";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -11,7 +15,7 @@ export const getImageURL = (imageSrc: string) => {
   return `${PROMIEDOS_URL}/${imageSrc}`;
 };
 
-export const findTeam = (team: string) => {
+export const findTeam = (team: TeamName | (string & {})) => {
   const teamPosition = [...positions.zoneA, ...positions.zoneB].find(
     (teamPosition) => teamPosition.team === team
   );

@@ -9,6 +9,7 @@ export type PlayedMatchResult = {
   away: TeamPosition;
   result: Result;
   classified: "home" | "away";
+  isResultFromReality: boolean;
 };
 
 type NotPlayedMatchResult = {
@@ -16,6 +17,7 @@ type NotPlayedMatchResult = {
   away: TeamPosition;
   result: null;
   classified: null;
+  isResultFromReality: false;
 };
 
 export type MatchResult = PlayedMatchResult | NotPlayedMatchResult;
