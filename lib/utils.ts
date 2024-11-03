@@ -5,7 +5,7 @@ import {
 } from "@/app/positions-regular-zone";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { PlayedRound, Round } from "./types";
+import { PlayedMatchResult, PlayedRound, Round } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -77,4 +77,63 @@ export const getNextRound = (round: PlayedRound): Round => {
   }
 
   return nextRoundMatches;
+};
+
+const REDUCIDO_RESULTS: PlayedMatchResult[] = [
+  {
+    home: findTeam("Quilmes"),
+    away: findTeam("Def. de Belgrano"),
+    classified: "home",
+    result: "home",
+    isResultFromReality: true,
+  },
+  {
+    home: findTeam("Gimnasia (M)"),
+    away: findTeam("Estudiantes (BA)"),
+    classified: "home",
+    result: "draw",
+    isResultFromReality: true,
+  },
+  {
+    home: findTeam("San Telmo"),
+    away: findTeam("Gimnasia (J)"),
+    classified: "home",
+    result: "home",
+    isResultFromReality: true,
+  },
+];
+
+export const replaceWithRealResults = (
+  round: Round,
+  skippedRoundsUntilNow: Round[] = []
+): {
+  round: Round;
+  skippedRounds: Round[];
+} => {
+  const roundWithReality = round.map((match) => {
+    const { home, away } = match;
+
+    const resultInReality = REDUCIDO_RESULTS.find(
+      (result) =>
+        result.home.team === home.team && result.away.team === away.team
+    );
+
+    return resultInReality ?? match;
+  });
+
+  const allIsReality = roundWithReality.every(
+    (match) => match.isResultFromReality
+  );
+
+  if (allIsReality) {
+    return replaceWithRealResults(
+      getNextRound(roundWithReality as PlayedRound),
+      [...skippedRoundsUntilNow, roundWithReality]
+    );
+  }
+
+  return {
+    round: roundWithReality,
+    skippedRounds: skippedRoundsUntilNow,
+  };
 };

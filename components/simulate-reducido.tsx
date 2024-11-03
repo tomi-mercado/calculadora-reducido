@@ -2,7 +2,7 @@
 
 import { final, firstRoundMatches } from "@/app/first-round-data";
 import { Round } from "@/lib/types";
-import { getNextRound } from "@/lib/utils";
+import { getNextRound, replaceWithRealResults } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { PromotionAnnouncement } from "./promotion-announcement";
@@ -123,7 +123,7 @@ export const SimulateReducido = ({
         onSubmit={(roundResults) => {
           setRounds((prev) => {
             const copy = [...prev];
-            copy[currentRound] = roundResults;
+            copy[currentRound] = replaceWithRealResults(roundResults).round;
             const nextRound = getNextRound(roundResults);
             return [...copy.slice(0, currentRound + 1), nextRound];
           });
