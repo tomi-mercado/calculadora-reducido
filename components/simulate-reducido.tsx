@@ -1,6 +1,11 @@
 "use client";
 
 import { final, firstRoundMatches } from "@/app/first-round-data";
+import {
+  DOBLE_PARTIDO_DESCRIPTION,
+  FINAL_DESCRIPTION,
+  OCTAVOS_DESCRIPTION,
+} from "@/lib/round-descriptions";
 import { Round } from "@/lib/types";
 import { getNextRound, replaceWithRealResults } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
@@ -82,6 +87,13 @@ export const SimulateReducido = ({
     [1]: "Final",
   }[roundMatches.length]!;
 
+  const roundDescription = {
+    [8]: OCTAVOS_DESCRIPTION,
+    [4]: DOBLE_PARTIDO_DESCRIPTION,
+    [2]: DOBLE_PARTIDO_DESCRIPTION,
+    [1]: FINAL_DESCRIPTION,
+  }[roundMatches.length]!;
+
   if (finalWinner && secondPromotion) {
     return (
       <div className="flex flex-col gap-6">
@@ -116,6 +128,7 @@ export const SimulateReducido = ({
       )}
       <RoundForm
         roundName={roundName}
+        roundDescription={roundDescription}
         matches={roundMatches.slice(isFirstRound ? 1 : 0)}
         firstPositionFinal={
           isFirstRound ? getFinalResult(rounds[0]) : undefined

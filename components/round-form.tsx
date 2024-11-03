@@ -1,17 +1,24 @@
 "use client";
 
+import { FINAL_DESCRIPTION } from "@/lib/round-descriptions";
 import {
   MatchResult,
   PlayedMatchResult,
   resultSchema,
   Round,
 } from "@/lib/types";
-import { findTeam } from "@/lib/utils";
+import { cn, findTeam } from "@/lib/utils";
 import { Trophy } from "lucide-react";
 import { useFormState } from "react-dom";
 import { InputMatchPrediction } from "./input-match-prediction";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 type State =
   | { type: "idle" }
@@ -98,10 +105,12 @@ const handleSubmit = (_: State, formData: FormData): State => {
 export const RoundForm = ({
   matches,
   roundName,
+  roundDescription,
   firstPositionFinal,
   onSubmit,
 }: {
   roundName: string;
+  roundDescription: string;
   matches: Round;
   children?: React.ReactNode;
   firstPositionFinal?: MatchResult | null;
@@ -125,11 +134,14 @@ export const RoundForm = ({
     <form className="flex flex-col gap-6" action={action}>
       {firstPositionFinal && (
         <Card className="border-primary">
-          <CardHeader>
+          <CardHeader className="text-center items-center">
             <CardTitle className="flex items-center gap-2 text-2xl justify-center">
               <Trophy className="h-6 w-6 text-primary" />
               Final
             </CardTitle>
+            <CardDescription className="w-2/3">
+              {FINAL_DESCRIPTION}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <InputMatchPrediction
@@ -144,10 +156,18 @@ export const RoundForm = ({
       )}
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl text-center">{roundName}</CardTitle>
+        <CardHeader className="text-center items-center">
+          <CardTitle className="text-2xl">{roundName}</CardTitle>
+          <CardDescription className="w-2/3">
+            {roundDescription}
+          </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+        <CardContent
+          className={cn(
+            "grid gap-4 grid-cols-1",
+            matches.length > 2 ? "lg:grid-cols-2" : ""
+          )}
+        >
           {matches.map((match) => (
             <InputMatchPrediction
               key={`${match.home.team}-${match.away.team}`}
