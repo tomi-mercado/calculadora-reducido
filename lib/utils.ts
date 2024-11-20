@@ -79,71 +79,7 @@ export const getNextRound = (round: Round): Round => {
   return nextRoundMatches;
 };
 
-const REDUCIDO_RESULTS: MatchResult[] = [
-  {
-    home: findTeam("Quilmes"),
-    away: findTeam("Def. de Belgrano"),
-    classified: "home",
-    result: "home",
-    isResultFromReality: true,
-  },
-  {
-    home: findTeam("Gimnasia (M)"),
-    away: findTeam("Estudiantes (BA)"),
-    classified: "home",
-    result: "draw",
-    isResultFromReality: true,
-  },
-  {
-    home: findTeam("San Telmo"),
-    away: findTeam("Gimnasia (J)"),
-    classified: "home",
-    result: "home",
-    isResultFromReality: true,
-  },
-  {
-    home: findTeam("Nueva Chicago"),
-    away: findTeam("Racing (C)"),
-    classified: "home",
-    result: "draw",
-    isResultFromReality: true,
-  },
-  {
-    home: findTeam("San Martin (T)"),
-    away: findTeam("Aldosivi"),
-    classified: "home",
-    result: "away",
-    isResultFromReality: true,
-  },
-  {
-    home: findTeam("Dep. Madryn"),
-    away: findTeam("San Miguel"),
-    classified: "home",
-    result: "draw",
-    isResultFromReality: true,
-  },
-  {
-    home: findTeam("San Martin (SJ)"),
-    away: findTeam("Gimnasia (S)"),
-    classified: "home",
-    result: "home",
-    isResultFromReality: true,
-  },
-  {
-    home: findTeam("All Boys"),
-    away: findTeam("Colon"),
-    classified: "home",
-    result: "draw",
-    isResultFromReality: true,
-  },
-  {
-    home: findTeam("Nueva Chicago"),
-    away: findTeam("Quilmes"),
-    classified: "home",
-    result: "home",
-    isResultFromReality: true,
-  },
-];
+const REDUCIDO_RESULTS: MatchResult[] = [];
 
 export const replaceWithRealResults = (
   round: Round,
