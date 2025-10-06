@@ -1,4 +1,3 @@
-import { findTeam, getImageURL } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,7 +18,7 @@ export const Footer = () => {
           , hincha del capo del sur
         </p>
         <Image
-          src={getImageURL(findTeam("Quilmes").imageSrc)}
+          src="https://api.promiedos.com.ar/images/team/hccf/4"
           alt="Quilmes"
           width={24}
           height={24}

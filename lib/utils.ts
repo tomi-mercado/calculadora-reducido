@@ -11,7 +11,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const PROMIEDOS_URL = "https://www.promiedos.com.ar";
+const PROMIEDOS_URL = "https://api.promiedos.com.ar";
 export const getImageURL = (imageSrc: string) => {
   return `${PROMIEDOS_URL}/${imageSrc}`;
 };

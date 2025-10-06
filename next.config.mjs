@@ -3,7 +3,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "www.promiedos.com.ar",
+        hostname: "api.promiedos.com.ar",
       },
     ],
   },
